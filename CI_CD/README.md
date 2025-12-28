@@ -1,5 +1,5 @@
 # 📘 Master Note: End-to-End ML Deployment (AWS + CI/CD)
-### Project: Student Performance Indicator Stack: Python (Flask), Docker, GitHub Actions, AWS (EC2, ECR). Goal: Automate the training and deployment of an ML model from code to cloud.
+### Project: Student Performance Indicator Stack: Python (Fastapi), Docker, GitHub Actions, AWS (EC2, ECR). Goal: Automate the training and deployment of an ML model from code to cloud.
 
 🏗 Phase 1: AWS Infrastructure Setup
 Before touching code, we set up the "Construction Site".
@@ -11,7 +11,7 @@ Generated: Access Key ID & Secret Access Key.
 
 Saved in GitHub: Settings -> Secrets and variables -> Actions -> AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY.
 
-2. ECR (The Warehouse)
+2. ECR
 Service: Elastic Container Registry.
 
 Action: Created a private repository named student-performance.
@@ -76,7 +76,7 @@ Practice Mode: ./run.sh (Stops if terminal closes).
 
 Production Mode: sudo ./svc.sh install -> sudo ./svc.sh start (Runs in background).
 
-💥 Phase 4: Troubleshooting (The "Battle Scars")
+💥 Phase 4: Troubleshooting
 These are the specific errors we fought and fixed. Memorize these.
 
 1. Git "Divergent Branches"
@@ -85,8 +85,6 @@ Error: ! [rejected] main -> main (non-fast-forward)
 Cause: GitHub had changes (like README) that local didn't have.
 
 Fix:
-
-Bash
 
 git pull origin main --no-rebase  # Merge remote changes
 ### OR (If you don't care about remote changes)
@@ -102,7 +100,6 @@ AWS Console: Modify Volume -> Increase to 20GB.
 
 Terminal: Expand partition and filesystem.
 
-Bash
 
 sudo growpart /dev/xvda 1
 sudo resize2fs /dev/xvda1
@@ -134,7 +131,7 @@ git push origin main
 5. "Invalid HTTP request" (HTTPS vs HTTP)
 Error: Logs show warning when accessing via Browser.
 
-Cause: Browser forces HTTPS, but Flask/Uvicorn is running on plain HTTP.
+Cause: Browser forces HTTPS, but Uvicorn is running on plain HTTP.
 
 Fix: Use http://<IP>:8000 (Explicitly HTTP) or open in Incognito mode.
 
@@ -145,4 +142,12 @@ Why CICD? Manually logging into a server to type git pull is slow and risky. Aut
 
 Why Self-Hosted Runner? AWS resources (like EC2) are private. A self-hosted runner sits inside the server, allowing GitHub to give commands to a machine it normally can't reach.
 
-Pro Tip for Future Arpit: Next time, before you start, check your .gitignore file to make sure you aren't ignoring critical files like models (unless you are using DVC/S3 for model storage, which is a topic for next year!).
+Pro Tip for Future: Next time, before start, check the .gitignore file to make sure you aren't ignoring critical files like models (unless you are using DVC/S3 for model storage).
+
+## 🧠 Theory: Beanstalk vs. EC2 (The Difference)
+Feature	Elastic Beanstalk (1st Deploy)	EC2 + Docker (2nd Deploy)
+Type	PaaS (Platform as a Service)	IaaS (Infrastructure as a Service)
+Control	Low (AWS manages OS/Updates)	High (You manage OS/Updates)
+Setup	Fast (Upload & Run)	Slow (Install Docker, Runner, Firewall)
+Scaling	Automatic (Built-in)	Manual (Need to setup Auto-Scaling Groups)
+Use Case	Quick demos, simple web apps	Custom application stacks, complex pipelines
